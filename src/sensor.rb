@@ -15,10 +15,10 @@ class Sensor
   end
 
   def state
-    if state == "broken" then
+    if @state == "broken" then
       nil
     else
-      state
+      @state
     end
   end
 end

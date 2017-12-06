@@ -1,7 +1,6 @@
 require "observer"
 
 class Pool
-  attr_accessor :name, :captors, :law
   include Observable
 
   @@id_max = 0
@@ -18,8 +17,20 @@ class Pool
     @@id_max += 1
   end
 
-  def options=(opts)
-    @options = opts
+  def name(name)
+    @name = name
+  end
+
+  def get_name
+    @name
+  end
+
+  def captors(captors)
+    @captors = captors
+  end
+
+  def law(law)
+    @law = law
   end
 
   def add_machine(machine)
@@ -28,7 +39,7 @@ class Pool
 
   def run
     # Divide the sensor pool in 500-sensor baskets
-    nb_threads = 1 + (captors.size / 500)
+    nb_threads = 1 + (@captors.size / 500)
     while true do
       changed
       nb_threads.times do |nb|
