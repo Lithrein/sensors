@@ -58,7 +58,17 @@ class Pool
         min = nb * 500
         max = min + 499
         @threads << Thread.new {
-          @captors[min..max].each { |c| c.state = @law.eval(0) }
+          if @law.type == :overview then
+            percent = @law.run(Time.new.hour + Time.new.min / 60)
+            to_on = Utils.pick(min..max, (min..max).size * percent / 100)
+            @captors[min..max].each { |c|
+              c.state = if to_on.index c then 1 else 0 end
+            }
+          else
+            @captors[min..max].each { |c|
+              c.state = @law.run(0,0,0)
+            }
+          end
         }
       end
       @threads.each { |t| t.join }

@@ -17,20 +17,31 @@ module Law
     model = Model.new
     model.instance_eval(&block)
     builder = Class.new do
-      @@attributes = []
+      @@attributes = {}
+      @@attributes[:parameters] = []
+      @@attributes[:type] = :behavior
 
+      def type
+        @@attributes[:type]
+      end
+      
       attrs = model.attributes
       attrs.each do |attr, val|
         if val.is_a?(Proc) then
           define_method(attr, val)
         else
-          attr_accessor val
-          @@attributes << val
+          if [:behavior, :overview].index val then
+            @@attributes[:type] = val
+          else
+            attr_accessor val
+            @@attributes[:parameters] << val
+          end
         end
+        p @@attributes
       end
 
       def initialize(*args)
-        @@attributes[0..args.size-1].zip(args) do |attr, val|
+        @@attributes[:parameters][0..args.size-1].zip(args) do |attr, val|
           send "#{attr}=", val
         end
       end

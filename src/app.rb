@@ -1,10 +1,11 @@
 # coding: utf-8
 require './law'
-require './pointcloud_law'
-require './random_law'
+#require './pointcloud_law'
+#require './random_law'
 require './pool'
 require './sensor'
 require './computer'
+require './utils'
 
 module Simulation
   @app = nil

@@ -1,9 +1,21 @@
 require './app'
 
-Law.define :RandomLaw do
-  type :behavior
-  parameters :range
-  run -> (time, neighbors, sensor) { rand(@range) }
+#Law.define :RandomLaw do
+#  type :behavior
+#  parameters :range
+#  run -> (time, neighbors, sensor) { rand(@range) }
+#end
+
+Law.define :PolynomLaw do
+  type :overview
+  parameters :coefs
+  run -> (time) {
+    val = 0
+    (@coefs.size).times do |i|
+      val = val * time + @coefs[i]
+    end
+    return val
+  }
 end
 
 Simulation.define do
@@ -12,7 +24,8 @@ Simulation.define do
   create Pool do
     name "Pool 1"
     captors Array.new(10){Sensor.new}
-    law RandomLaw.new 1..2
+    #    law RandomLaw.new 1..2
+    law PolynomLaw.new [50]
     options :chaos_monkey
   end
   
