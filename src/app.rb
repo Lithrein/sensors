@@ -25,10 +25,13 @@ module Simulation
 end
 
 class App
+  BACKENDS = [ :influxdb ].freeze
+  
   def initialize(name: nil, pools: Hash.new(nil), machines: Hash.new(nil))
     @name = name
     @pools = pools
     @machines = machines
+    @options = Hash.new(nil)
   end
 
   def run
@@ -58,6 +61,16 @@ class App
   def monitor(pool_name, **opts)
     @pools[pool_name].add_observer(@machines[opts[:with]])
   end
+
+  def set_backend(backend)
+    if BACKENDS.index backend then
+      options[:backend] = backend
+    else
+      puts "The backend #{backend} is not supported."
+    end
+  end
+
+
 
   def create(build_class, &block)
     instance = build_class.new
